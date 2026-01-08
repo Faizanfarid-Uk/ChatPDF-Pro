@@ -9,8 +9,7 @@ Chatbot Pro is an advanced Retrieval-Augmented Generation (RAG) platform that tr
 ![image alt](https://github.com/Faizanfarid-Uk/ChatPDF-Pro/blob/6e5898790ce93dfcd38ee35768d41178473ed566/Screenshot_9-1-2026_15843_127.0.0.1.jpeg)
 ![image alt](https://github.com/Faizanfarid-Uk/ChatPDF-Pro/blob/d0ca6f1f9e1899e7ea1fb1ca93c6fae1e592ef18/Screenshot_9-1-2026_15858_127.0.0.1.jpeg)
 ![image alt](https://github.com/Faizanfarid-Uk/ChatPDF-Pro/blob/42a382c50f5201ab70cbf775f69f446ab303cdf7/Screenshot_9-1-2026_15939_127.0.0.1.jpeg)
-![image alt]()
-![image alt]()
+![image alt](https://github.com/Faizanfarid-Uk/ChatPDF-Pro/blob/bdbd6523080fab00cb9cbd096759afa17f00fdcc/Screenshot_9-1-2026_15954_127.0.0.1.jpeg)
 ## Table of Contents
 
 - [Project Overview](#project-overview)  
