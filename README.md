@@ -3,6 +3,8 @@
 Chatbot Pro is an advanced Retrieval-Augmented Generation (RAG) platform that transforms static PDF documents into intelligent, conversational knowledge bases using AI technology.
 
 ---
+# Images
+![image alt](image url)
 
 ## Table of Contents
 
