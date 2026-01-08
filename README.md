@@ -224,20 +224,12 @@ This project is proprietary software developed for educational and commercial pu
 
 Chatbot Pro - Transforming Documents into Intelligence
 
-yaml
-Copy code
 
----
 
-✅ This version:  
+**Conclusion**
 
-- Uses **Chatbot Pro** everywhere  
-- Omits any personal names or supervisors  
+- Uses **Chatbot Pro** everywhere 
 - Fully structured with **Table of Contents**  
 - Ready to commit as `README.md` on GitHub  
 
----
 
-If you want, I can also **add GitHub badges** for Python version, Flask, and license to make it look more professional and modern on the repo front page.  
-
-Do you want me to do that?
