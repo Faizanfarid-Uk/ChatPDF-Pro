@@ -4,7 +4,7 @@ Chatbot Pro is an advanced Retrieval-Augmented Generation (RAG) platform that tr
 
 ---
 # Images
-![image alt](image url)
+![image alt](imagel)
 
 ## Table of Contents
 
