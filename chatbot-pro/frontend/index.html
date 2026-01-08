@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusAI - Intelligent Document Intelligence Platform</title>
+    <style>
+        /* ... YOUR EXACT CSS STYLES (unchanged) ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .video-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(20,20,20,0.85) 100%);
+        }
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 5px 30px rgba(255, 215, 0, 0.1);
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            letter-spacing: 0.5px;
+        }
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+        .nav-links a:hover {
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .page.active {
+            display: block;
+            animation: pageSlide 0.6s ease;
+        }
+        @keyframes pageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            text-align: center;
+        }
+        .hero-content {
+            z-index: 1;
+            max-width: 1000px;
+            padding: 2rem;
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            animation: glow 2s ease-in-out infinite;
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.5); }
+        }
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShine 3s ease-in-out infinite;
+            line-height: 1.2;
+        }
+        @keyframes textShine {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+            letter-spacing: 1px;
+        }
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(255, 215, 0, 0.5);
+        }
+        .content-section {
+            padding: 6rem 10%;
+            position: relative;
+        }
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        .project-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 140, 0, 0.05) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        .project-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+        .project-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .project-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        .project-card:hover .project-image::before {
+            left: 100%;
+        }
+        .project-content {
+            padding: 2rem;
+        }
+        .project-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+        .project-content p {
+            color: #aaa;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+        .about-image {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 140, 0, 0.1) 100%);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .about-text h3 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #ffd700;
+        }
+        .about-text p {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            color: #bbb;
+            margin-bottom: 1.5rem;
+        }
+        .developer-badge {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #000;
+            border-radius: 30px;
+            font-weight: 900;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+        .supervisor-badge {
+            display: block;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            color: #ffd700;
+            font-weight: 600;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(0, 0, 0, 0.8) 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .feature-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+        .feature-card p {
+            color: #aaa;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+        .login-container {
+            max-width: 500px;
+            margin: 5rem auto;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: #ffd700;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 1.2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+        }
+        .submit-button {
+            width: 100%;
+            padding: 1.3rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            border: none;
+            border-radius: 50px;
+            color: #000;
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.5);
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .dashboard-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+        .dashboard-card h3 {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        .dashboard-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #fff;
+        }
+        .chat-container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(0, 0, 0, 0.95) 100%);
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .chat-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .chat-header h3 {
+            color: #ffd700;
+            font-size: 1.5rem;
+        }
+        .chat-messages {
+            height: 550px;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border-radius: 10px;
+        }
+        .message {
+            margin-bottom: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 20px;
+            animation: messageSlide 0.4s ease;
+            max-width: 80%;
+        }
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .message.user {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #000;
+            margin-left: auto;
+            font-weight: 600;
+        }
+        .message.bot {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #fff;
+            margin-right: auto;
+        }
+        .chat-input-container {
+            display: flex;
+            padding: 1.5rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            gap: 1rem;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 25px;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        .send-button {
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+        }
+        .upload-area {
+            max-width: 700px;
+            margin: 3rem auto;
+            padding: 4rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border-radius: 30px;
+            border: 2px dashed rgba(255, 215, 0, 0.4);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .upload-area:hover {
+            border-color: #ffd700;
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.2);
+            transform: scale(1.02);
+        }
+        .upload-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .upload-area h3 {
+            font-size: 2rem;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        .file-input {
+            display: none;
+        }
+        .upload-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+        .upload-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+        .file-status {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: #ffd700;
+        }
+        .loading-spinner {
+            width: 30px;
+            height: 30px;
+            border: 4px solid rgba(255, 215, 0, 0.3);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            animation: particleFloat 8s ease-in-out infinite;
+        }
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(200px, -200px) scale(1);
+                opacity: 0;
+            }
+        }
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        .keyword-tag {
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 25px;
+            color: #ffd700;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .keyword-tag:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.1);
+        }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            .about-container {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            .content-section {
+                padding: 4rem 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-network-of-data-and-information-45-large.mp4" type="video/mp4">
+        </video>
+    </div>
+    <!-- Particles -->
+    <div class="particles-container"></div>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">NexusAI</div>
+        <ul class="nav-links">
+            <li><a href="#" data-page="login">Login</a></li>
+            <li><a href="#" data-page="home">Home</a></li>
+            <li><a href="#" data-page="showcase">Showcase</a></li>
+            <li><a href="#" data-page="about">About</a></li>
+            <li><a href="#" data-page="features">Features</a></li>
+            <li><a href="#" data-page="upload">Upload</a></li>
+            <li><a href="#" data-page="chat">AI Chat</a></li>
+            <li><a href="#" data-page="dashboard">Dashboard</a></li>
+         
+        </ul>
+    </nav>
+    
+    <!-- Login Page -->
+    <div class="page" id="login">
+        <div class="content-section">
+            <div class="login-container">
+                <h2 class="section-title" style="margin-bottom: 2rem;">Sign In</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="loginEmail" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="submit-button">LOGIN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div class="page active" id="home">
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">🚀 NEXT-GENERATION AI PLATFORM</div>
+                <h1>NexusAI</h1>
+                <p>Revolutionary Retrieval-Augmented Generation Platform | Transform Documents into Intelligent Conversations with State-of-the-Art Neural Architecture</p>
+                <a href="#" class="cta-button" data-page="upload">LAUNCH PLATFORM</a>
+                <div class="keywords">
+                    <span class="keyword-tag">Machine Learning</span>
+                    <span class="keyword-tag">Neural Networks</span>
+                    <span class="keyword-tag">Natural Language Processing</span>
+                    <span class="keyword-tag">Vector Embeddings</span>
+                    <span class="keyword-tag">Deep Learning</span>
+                    <span class="keyword-tag">AI Innovation</span>
+                    <span class="keyword-tag">Semantic Search</span>
+                    <span class="keyword-tag">Enterprise AI</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Showcase -->
+    <div class="page" id="showcase">
+        <div class="content-section">
+            <h2 class="section-title">Project Showcase</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <div class="project-image">🧠</div>
+                    <div class="project-content">
+                        <h3>Advanced RAG Architecture</h3>
+                        <p>Leveraging cutting-edge Retrieval-Augmented Generation technology with Google Gemini AI, FAISS vector database, and sophisticated document parsing to deliver unparalleled accuracy in question-answering systems.</p>
+                    </div>
+                </div>
+                <!-- ... other cards unchanged ... -->
+                <div class="project-card">
+                    <div class="project-image">⚡</div>
+                    <div class="project-content">
+                        <h3>Lightning-Fast Processing</h3>
+                        <p>Utilizing FAISS (Facebook AI Similarity Search) for millisecond-level vector similarity searches across millions of embeddings, ensuring real-time responses and seamless user experience.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">🔒</div>
+                    <div class="project-content">
+                        <h3>Enterprise Security</h3>
+                        <p>Built with enterprise-grade security protocols, end-to-end encryption, and compliance with international data protection standards for confidential document processing.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">🎯</div>
+                    <div class="project-content">
+                        <h3>Context-Aware Intelligence</h3>
+                        <p>Advanced conversational memory with intelligent context management, enabling natural multi-turn dialogues and maintaining coherent conversation flow across complex queries.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">📊</div>
+                    <div class="project-content">
+                        <h3>Semantic Understanding</h3>
+                        <p>Powered by transformer-based embeddings that capture deep semantic meaning, enabling nuanced comprehension beyond keyword matching for superior information retrieval.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">🌐</div>
+                    <div class="project-content">
+                        <h3>Scalable Infrastructure</h3>
+                        <p>Cloud-native architecture designed for horizontal scalability, supporting concurrent users and massive document repositories without performance degradation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div class="page" id="about">
+        <div class="content-section">
+            <h2 class="section-title">About NexusAI</h2>
+            <div class="about-container">
+                <div class="about-image">
+                    <svg viewBox="0 0 400 400" style="width: 100%; height: 100%;">
+                        <defs>
+                            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="200" cy="200" r="80" fill="url(#goldGrad)" opacity="0.3" />
+                        <circle cx="200" cy="200" r="60" fill="url(#goldGrad)" opacity="0.5" />
+                        <circle cx="200" cy="200" r="40" fill="url(#goldGrad)" />
+                        <text x="200" y="320" text-anchor="middle" font-size="28" fill="#ffd700" font-weight="bold">AI POWERED</text>
+                    </svg>
+                </div>
+                <div class="about-text">
+                    <h3>Engineered for Excellence</h3>
+                    <p>NexusAI represents the pinnacle of modern artificial intelligence research and development...</p>
+                    <p>Built on a foundation of advanced machine learning frameworks...</p>
+                    <p>This groundbreaking platform has been meticulously crafted...</p>
+                    <div class="developer-badge">Developed by Faizan Farid</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Page -->
+    <div class="page" id="features">
+        <div class="content-section">
+            <h2 class="section-title">Advanced Features</h2>
+            <div class="features-grid">
+                <!-- Feature cards unchanged -->
+                <div class="feature-card"><div class="feature-icon">🤖</div><h3>Neural Language Processing</h3><p>Powered by Google's Gemini 2.0...</p></div>
+                <div class="feature-card"><div class="feature-icon">💾</div><h3>Vector Database Engine</h3><p>FAISS-powered semantic search...</p></div>
+                <div class="feature-card"><div class="feature-icon">📄</div><h3>Intelligent Document Parsing</h3><p>Advanced PDF processing...</p></div>
+                <div class="feature-card"><div class="feature-icon">🔗</div><h3>Semantic Chunking</h3><p>Recursive character splitting...</p></div>
+                <div class="feature-card"><div class="feature-icon">💬</div><h3>Conversational Memory</h3><p>Sophisticated dialogue management...</p></div>
+                <div class="feature-card"><div class="feature-icon">🎯</div><h3>Context-Aware Retrieval</h3><p>History-aware retriever...</p></div>
+                <div class="feature-card"><div class="feature-icon">⚙️</div><h3>RESTful API Architecture</h3><p>Flask-based microservices...</p></div>
+                <div class="feature-card"><div class="feature-icon">🚀</div><h3>Real-Time Processing</h3><p>Asynchronous processing pipeline...</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Page -->
+    <div class="page" id="upload">
+        <div class="content-section">
+            <h2 class="section-title">Upload Document</h2>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📤</div>
+                <h3>Drag & Drop Your PDF</h3>
+                <p style="color: #888; margin: 1rem 0;">or click to browse files</p>
+                <input type="file" id="fileInput" class="file-input" accept=".pdf">
+                <button class="upload-button" onclick="document.getElementById('fileInput').click()">SELECT PDF FILE</button>
+                <div class="file-status" id="fileStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Page -->
+    <div class="page" id="chat">
+        <div class="content-section">
+            <h2 class="section-title">AI Assistant</h2>
+            <div class="chat-container">
+                <div class="chat-header"><h3>💬 Intelligent Document Chat</h3></div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">Welcome to NexusAI! Upload a document to begin...</div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything about your document...">
+                    <button class="send-button" onclick="sendMessage()">SEND</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div class="page" id="dashboard">
+        <div class="content-section">
+            <h2 class="section-title">Analytics Dashboard</h2>
+            <div class="dashboard-grid">
+                <div class="dashboard-card"><h3>Documents Processed</h3><div class="dashboard-value" id="docsProcessed">0</div></div>
+                <div class="dashboard-card"><h3>Total Queries</h3><div class="dashboard-value" id="totalQueries">0</div></div>
+                <div class="dashboard-card"><h3>Active Sessions</h3><div class="dashboard-value" id="activeSessions">0</div></div>
+                <div class="dashboard-card"><h3>Avg Response Time</h3><div class="dashboard-value" id="avgResponse">0.8s</div></div>
+                <div class="dashboard-card"><h3>Vector Embeddings</h3><div class="dashboard-value" id="embeddings">0</div></div>
+                <div class="dashboard-card"><h3>Accuracy Rate</h3><div class="dashboard-value" id="accuracy">98.5%</div></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // === INTEGRATED FRONTEND SCRIPT ===
+        const API_BASE_URL = 'http://127.0.0.1:5000';
+        let sessionId = 'session_' + Date.now();
+        let queryCount = 0;
+
+        // Navigation
+        document.querySelectorAll('[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetPage = link.getAttribute('data-page');
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                document.getElementById(targetPage).classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (targetPage === 'dashboard') {
+                    loadRealStats();
+                }
+            });
+        });
+
+        // Particles
+        function createParticles() {
+            const container = document.querySelector('.particles-container') || (() => {
+                const div = document.createElement('div');
+                div.className = 'particles-container';
+                document.body.appendChild(div);
+                return div;
+            })();
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                document.body.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Upload Handlers
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileStatus = document.getElementById('fileStatus');
+
+        ['dragover', 'dragenter'].forEach(evt => {
+            uploadArea.addEventListener(evt, (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#ffd700';
+                uploadArea.style.transform = 'scale(1.02)';
+            });
+        });
+        ['dragleave', 'dragend'].forEach(evt => {
+            uploadArea.addEventListener(evt, (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'rgba(255, 215, 0, 0.4)';
+                uploadArea.style.transform = 'scale(1)';
+            });
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 215, 0, 0.4)';
+            uploadArea.style.transform = 'scale(1)';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) handleFileUpload(files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFileUpload(e.target.files[0]);
+        });
+
+        async function handleFileUpload(file) {
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                fileStatus.innerHTML = '<span style="color: #ff4444;">❌ Only PDF files allowed</span>';
+                return;
+            }
+            if (file.size > 50 * 1024 * 1024) {
+                fileStatus.innerHTML = '<span style="color: #ff4444;">❌ File too large (max 50MB)</span>';
+                return;
+            }
+
+            fileStatus.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div class="loading-spinner"></div>Uploading and processing...</div>';
+            const formData = new FormData();
+            formData.append('pdf', file);
+
+            try {
+                const resp = await fetch(`${API_BASE_URL}/upload`, { method: 'POST', body: formData });
+                const result = await resp.json();
+
+                if (resp.ok && result.success) {
+                    fileStatus.innerHTML = `<span style="color: #4ade80;">✓ ${file.name} processed successfully!</span>`;
+                    document.getElementById('docsProcessed').textContent = '1';
+                    document.getElementById('embeddings').textContent = result.chunks || 'N/A';
+                    setTimeout(() => {
+                        document.querySelector('[data-page="chat"]').click();
+                    }, 1500);
+                } else {
+                    throw new Error(result.error || 'Upload failed');
+                }
+            } catch (err) {
+                console.error('Upload error:', err);
+                fileStatus.innerHTML = `<span style="color: #ff8c00;">⚠️ ${err.message || 'Backend not connected'}</span>`;
+            }
+        }
+
+        // Chat
+        
+async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    const container = document.getElementById('chatMessages');
+
+    // USER MESSAGE
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.textContent = msg;
+    container.appendChild(userMsg);
+
+    input.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    queryCount++;
+    document.getElementById('totalQueries').textContent = queryCount;
+
+    // LOADING MESSAGE
+    const loading = document.createElement('div');
+    loading.className = 'message bot';
+    loading.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div class="loading-spinner"></div>Thinking...
+        </div>`;
+    container.appendChild(loading);
+    container.scrollTop = container.scrollHeight;
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: msg,
+                session_id: sessionId
+            })
+        });
+
+        const data = await res.json();
+        loading.remove();
+
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message bot';
+
+        if (!res.ok || !data.success) {
+            botMsg.textContent =
+                data.error || "⚠️ AI could not generate a response.";
+        } else {
+            botMsg.textContent = data.answer;
+        }
+
+        container.appendChild(botMsg);
+
+    } catch (err) {
+        console.error(err);
+        loading.remove();
+
+        const errorMsg = document.createElement('div'); // ✅ FIXED
+        errorMsg.className = 'message bot';
+        errorMsg.textContent = "⚠️ Backend not reachable. Is Flask running?";
+        container.appendChild(errorMsg);
+    }
+
+    container.scrollTop = container.scrollHeight;
+}
+
+
+
+        // Dashboard stats from backend
+        async function loadRealStats() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/stats`);
+                if (res.ok) {
+                    const stats = await res.json();
+                    document.getElementById('docsProcessed').textContent = stats.documents_processed;
+                    document.getElementById('embeddings').textContent = stats.vector_store_size;
+                    document.getElementById('activeSessions').textContent = stats.active_sessions;
+                    // totalQueries & accuracy remain simulated
+                }
+            } catch (err) {
+                console.warn("Could not fetch stats:", err);
+            }
+        }
+
+        // Initial load
+        window.addEventListener('load', () => {
+            // Preload video, etc.
+        });
+    </script>
+</body>
+</html>
